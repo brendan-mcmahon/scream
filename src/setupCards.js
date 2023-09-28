@@ -74,7 +74,6 @@ const createVictimDeck = (characterDecks) => {
 };
 
 export default function Setup(PrimaryKillerCount, SecondaryKillerCount, characterCount) {
-  console.log(PrimaryKillerCount, SecondaryKillerCount, characterCount)
   const characterDecks = assembleCharacterDecks(characterCount);
 
   const killerDecks = characterDecks.splice(0, 2);

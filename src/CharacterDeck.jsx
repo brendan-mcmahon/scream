@@ -9,14 +9,14 @@ export function CharacterDeck({ deck, selected, onSelect }) {
       <div>
         <label>Trust:</label> {deck.trust}
       </div>
-      <div>
+      <div className={deck.cards.length > 0 ? "" : "empty"}>
         <label>Cards:</label> {deck.cards.length}
       </div>
     </div>
   );
 
   const onSelected = () => {
-    if (deck.status === "dead") return;
+    if (deck.status === "dead" || deck.cards.length === 0) return;
     onSelect();
   };
 

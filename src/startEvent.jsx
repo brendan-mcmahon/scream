@@ -3,18 +3,20 @@ export const startEvent = (gamePhase, characterDecks, selectedCharacterIndices, 
 
   const newDecks = [...characterDecks.get];
 
-  const selectedCharacterCards = selectedCharacterIndices.get.map((index) => {
-    const deck = { ...characterDecks.get[index] };
-    const card = deck.cards[0];
-    deck.cards = deck.cards.slice(1);
-    return { ...card, deck };
-  });
+  const selectedCharacterCards = selectedCharacterIndices.get.map((index) => newDecks[index].cards.shift());
+
+  console.log(selectedCharacterCards.map((c) => c.content));
+  console.log(newDecks);
 
   const hasKillCard = selectedCharacterCards.some((c) => c.content === "Kill");
 
   if (hasKillCard) {
+    console.log("has kill card");
     const victim = victimDeck.get[0];
+    console.log(victim.content);
+    console.log(newDecks.map((d) => d.name));
     const index = newDecks.findIndex((deck) => deck.name === victim.content);
+    console.log(index);
     newDecks[index] = {
       ...newDecks[index],
       status: "dead",
@@ -23,15 +25,12 @@ export const startEvent = (gamePhase, characterDecks, selectedCharacterIndices, 
   }
 
   selectedCharacterIndices.get.forEach((i) => {
-    const deck = selectedCharacterCards.find((c) => c.deck.name === newDecks[i].name).deck;
-    newDecks[i] = deck;
     if (hasKillCard) {
       newDecks[i].suspicion++;
     } else {
       newDecks[i].trust++;
     }
   });
-  console.log("setting character decks", newDecks);
   characterDecks.set(newDecks);
   eventCards.set(selectedCharacterCards);
 };

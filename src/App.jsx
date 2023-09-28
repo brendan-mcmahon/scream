@@ -36,7 +36,6 @@ function App() {
   };
 
   const endEvent = () => {
-    console.log("ending event");
     gamePhase.set("choose");
     eventCards.set([]);
     selectedCharacterIndices.set([]);
