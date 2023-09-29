@@ -19,24 +19,29 @@ function App() {
   const gamePhase = useLocalStorage("gamePhase", "choose");
   const selectedCharacterIndices = useLocalStorage("selectedCharacterIndices", []);
   const eventCards = useLocalStorage("eventCards", []);
+  const accumulatedCards = useLocalStorage("accumulatedCards", []);
   const [newGameModal, setNewGameModal] = useState(false);
   const onEventStart = () => startEvent(gamePhase, characterDecks, selectedCharacterIndices, victimDeck, eventCards);
 
   const startNewGame = (primaryKillerCount, secondaryKillerCount, characterCount) => {
     const newGame = Setup(primaryKillerCount, secondaryKillerCount, characterCount);
-    
+
     characterDecks.set(newGame.characterDecks);
     victimDeck.set(newGame.victimDeck);
-    
+
     gamePhase.set("choose");
     selectedCharacterIndices.set([]);
     eventCards.set([]);
+    accumulatedCards.set([]);
 
     setNewGameModal(false);
   };
 
   const endEvent = () => {
+    console.log(eventCards.get);
+    accumulatedCards.set((c) => [...c, ...eventCards.get.filter((c) => c.content !== "Kill")]);
     gamePhase.set("choose");
+
     eventCards.set([]);
     selectedCharacterIndices.set([]);
   };
@@ -65,6 +70,13 @@ function App() {
       />
 
       <EventCards eventCards={eventCards.get} />
+
+      <div className="accumulated-cards">
+        <div className="card">A: {accumulatedCards.get.filter((c) => c.content === "A").length}</div>
+        <div className="card">B: {accumulatedCards.get.filter((c) => c.content === "B").length}</div>
+        <div className="card">C: {accumulatedCards.get.filter((c) => c.content === "C").length}</div>
+      </div>
+
       <div className="buttons">
         {gamePhase.get == "choose" && (
           <button disabled={eventDisabled} onClick={onEventStart}>
@@ -75,7 +87,7 @@ function App() {
         <button onClick={() => setNewGameModal(true)}>New Game</button>
       </div>
 
-      {newGameModal && <NewGameModal startNewGame={startNewGame} close={() => setNewGameModal(false)}></NewGameModal> }
+      {newGameModal && <NewGameModal startNewGame={startNewGame} close={() => setNewGameModal(false)}></NewGameModal>}
     </div>
   );
 }
